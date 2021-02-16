@@ -1,2 +1,2 @@
 # rsi_alert
-A RSI alert bot
+A Binance RSI alert bot
