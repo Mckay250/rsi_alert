@@ -1,8 +1,9 @@
 import websocket, json, pprint, numpy, talib
 from notifypy import Notify
 
-SOCKET = "wss://stream.binance.com:9443/ws/egldusdt@kline_1m"
 
+print("Enter trade symbol")
+trade_symbol = input("Symbol(default = EGLDUSDT): ")
 
 
 close_values = []
@@ -10,10 +11,19 @@ close_values = []
 RSI_PERIOD = 14
 RSI_OVERBOUGHT = 70
 RSI_OVERSOLD = 30
-TRADE_SYMBOL = 'EGLDUSDT'
+TRADE_SYMBOL = ""
+if trade_symbol in ["", " ", None]:
+    TRADE_SYMBOL = 'EGLDUSDT' 
+else: 
+    TRADE_SYMBOL = trade_symbol
+
 
 notification = Notify()
 notification.audio = "piece-of-cake-611.wav"
+
+
+SOCKET = f"wss://stream.binance.com:9443/ws/{TRADE_SYMBOL.lower()}@kline_1m"
+FUTURES_SOCKET = F"wss://fstream.binance.com/ws/{TRADE_SYMBOL.lower()}@kline_1m"
 
 def on_open(ws):
     print("Connection opened")
@@ -63,5 +73,5 @@ def on_message(ws, message):
 
 
 
-ws = websocket.WebSocketApp(SOCKET, on_open=on_open, on_close=on_close, on_message=on_message)
+ws = websocket.WebSocketApp(FUTURES_SOCKET, on_open=on_open, on_close=on_close, on_message=on_message)
 ws.run_forever()
