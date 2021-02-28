@@ -4,6 +4,12 @@ from notifypy import Notify
 
 print("Enter trade symbol")
 trade_symbol = input("Symbol(default = EGLDUSDT): ")
+over_bought = input("Do you want to be Alerted when there is an overbought signal?(Y/N, default = N): ")
+
+over_bought_alert = False
+
+if (over_bought in ["Y", "y"]): 
+    over_bought_alert = True
 
 
 close_values = []
@@ -12,6 +18,7 @@ RSI_PERIOD = 14
 RSI_OVERBOUGHT = 70
 RSI_OVERSOLD = 30
 TRADE_SYMBOL = ""
+
 if trade_symbol in ["", " ", None]:
     TRADE_SYMBOL = 'EGLDUSDT' 
 else: 
@@ -53,14 +60,15 @@ def on_message(ws, message):
 
             if last_rsi > RSI_OVERBOUGHT:
                 print('********** OVERBOUGHT ALERT **********')
-                notification.title = TRADE_SYMBOL + " OVERBOUGHT RSI NOTIFICATION"
-                notification.message = f"{TRADE_SYMBOL} has been overbought. The RSI unit is at {last_rsi} and the last price is ${close_value}"
-                notification.send()
+                if (over_bought_alert):
+                    notification.title = TRADE_SYMBOL + " OVERBOUGHT RSI NOTIFICATION"
+                    notification.message = f"{TRADE_SYMBOL} has been overbought. The RSI unit is at {last_rsi} and the last price is $ {close_value}"
+                    notification.send()
             
             if last_rsi < RSI_OVERSOLD:
                 print('********** OVERSOLD ALERT **********')
                 notification.title = TRADE_SYMBOL + " OVERSOLD RSI NOTIFICATION"
-                notification.message = f"{TRADE_SYMBOL} has been oversold. The RSI unit is at {last_rsi} and the last price is ${close_value}"
+                notification.message = f"{TRADE_SYMBOL} has been oversold. The RSI unit is at {last_rsi} and the last price is $ {close_value}"
                 notification.send()
 
 
