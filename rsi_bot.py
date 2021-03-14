@@ -5,32 +5,41 @@ from notifypy import Notify
 print("Enter trade symbol")
 trade_symbol = input("Symbol(default = EGLDUSDT): ")
 over_bought = input("Do you want to be Alerted when there is an overbought signal?(Y/N, default = N): ")
+rsi_period = int(input("Enter RSI PERIOD here (default = 7): "))
+rsi_time_frame = int(input("Enter RSI TIME FRAME here (default=15): "))
 
 over_bought_alert = False
 
 if (over_bought in ["Y", "y"]): 
     over_bought_alert = True
 
+if (rsi_period in ["", " ", None]):
+    rsi_period = 7
+
+if trade_symbol in ["", " ", None]:
+    trade_symbol = 'EGLDUSDT' 
+else: 
+    TRADE_SYMBOL = trade_symbol
+
+if (rsi_time_frame in ["", " ", None]):
+    rsi_time_frame = 15
+    
 
 close_values = []
 
-RSI_PERIOD = 14
+RSI_PERIOD = rsi_period
 RSI_OVERBOUGHT = 70
 RSI_OVERSOLD = 30
-TRADE_SYMBOL = ""
+TRADE_SYMBOL = trade_symbol
 
-if trade_symbol in ["", " ", None]:
-    TRADE_SYMBOL = 'EGLDUSDT' 
-else: 
-    TRADE_SYMBOL = trade_symbol
 
 
 notification = Notify()
 notification.audio = "piece-of-cake-611.wav"
 
 
-SOCKET = f"wss://stream.binance.com:9443/ws/{TRADE_SYMBOL.lower()}@kline_1m"
-FUTURES_SOCKET = F"wss://fstream.binance.com/ws/{TRADE_SYMBOL.lower()}@kline_1m"
+SOCKET = f"wss://stream.binance.com:9443/ws/{TRADE_SYMBOL.lower()}@kline_{rsi_time_frame}m"
+FUTURES_SOCKET = F"wss://fstream.binance.com/ws/{TRADE_SYMBOL.lower()}@kline_{rsi_time_frame}m"
 
 def on_open(ws):
     print("Connection opened")
