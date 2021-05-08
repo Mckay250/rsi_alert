@@ -1,7 +1,7 @@
-import websocket, json, pprint, numpy, talib
+import websocket, json, pprint, numpy, talib, requests
 from notifypy import Notify
 
-
+# Get user's inputs
 print("Enter trade symbol")
 trade_symbol = input("Symbol(default = EGLDUSDT): ")
 over_bought = input("Do you want to be Alerted when there is an overbought signal?(Y/N, default = N): ")
@@ -39,7 +39,10 @@ notification.audio = "piece-of-cake-611.wav"
 
 
 SOCKET = f"wss://stream.binance.com:9443/ws/{TRADE_SYMBOL.lower()}@kline_{rsi_time_frame}m"
-FUTURES_SOCKET = F"wss://fstream.binance.com/ws/{TRADE_SYMBOL.lower()}@kline_{rsi_time_frame}m"
+FUTURES_SOCKET = f"wss://fstream.binance.com/ws/{TRADE_SYMBOL.lower()}@kline_{rsi_time_frame}m"
+
+# PAST_DATA_URL = f"https://fapi.binance.com/fapi/v1/continuousKlines?symbol={TRADE_SYMBOL.upper()}&limit=20&interval={rsi_time_frame}m"
+PAST_DATA_URL = f"https://fapi.binance.com/fapi/v1/klines?symbol={TRADE_SYMBOL.lower()}&limit=20&interval={rsi_time_frame}m"
 
 def on_open(ws):
     print("Connection opened")
@@ -52,13 +55,15 @@ def on_message(ws, message):
     msg = json.loads(message)
 
     candle = msg['k']
+    # print("msg is ", msg)
+    # print("candle is ", candle)
     is_candle_closed = candle['x']
     close_value = candle['c']
 
     if is_candle_closed:
         close_values.append(float(close_value))
         print(f"length of close_values {len(close_values)}")
-        print(f"1 min candle has closed at {close_value}")
+        print(f"{rsi_time_frame} min candle has closed at {close_value}")
 
         if len(close_values) > RSI_PERIOD:
             np_closes = numpy.array(close_values)
@@ -82,10 +87,15 @@ def on_message(ws, message):
 
 
 
-
-
-
-
+past_data = requests.get(PAST_DATA_URL)
+parsed_past_data = past_data.json()
+# print(parsed_past_data)
+for item in parsed_past_data:
+    if (parsed_past_data[-1][0] == item[0]):
+        continue
+    close_values.append(float(item[4]))
+# print("length of close values is: ", len(close_values))
+# print(close_values)
 
 
 
