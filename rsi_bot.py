@@ -1,5 +1,7 @@
 import websocket, json, pprint, numpy, talib, requests
 from notifypy import Notify
+import push_notification_service
+
 
 # Get user's inputs
 print("Enter trade symbol")
@@ -77,13 +79,17 @@ def on_message(ws, message):
                 if (over_bought_alert):
                     notification.title = TRADE_SYMBOL + " OVERBOUGHT RSI NOTIFICATION"
                     notification.message = f"{TRADE_SYMBOL} has been overbought. The RSI unit is at {last_rsi} and the last price is $ {close_value}"
+                    push_notification_service.send_notification_to_mobile(notification.title, notification.message)
                     notification.send()
             
             if last_rsi < RSI_OVERSOLD:
                 print('********** OVERSOLD ALERT **********')
                 notification.title = TRADE_SYMBOL + " OVERSOLD RSI NOTIFICATION"
                 notification.message = f"{TRADE_SYMBOL} has been oversold. The RSI unit is at {last_rsi} and the last price is $ {close_value}"
+                push_notification_service.send_notification_to_mobile(notification.title, notification.message)
                 notification.send()
+
+
 
 
 
