@@ -1,5 +1,5 @@
 import websocket, json, pprint, numpy, talib, requests
-from notifypy import Notify
+# from notifypy import Notify
 import push_notification_service
 
 
@@ -36,8 +36,8 @@ TRADE_SYMBOL = trade_symbol
 
 
 
-notification = Notify()
-notification.audio = "piece-of-cake-611.wav"
+# notification = Notify()
+# notification.audio = "piece-of-cake-611.wav"
 
 
 SOCKET = f"wss://stream.binance.com:9443/ws/{TRADE_SYMBOL.lower()}@kline_{rsi_time_frame}m"
@@ -68,6 +68,8 @@ def on_message(ws, message):
         print(f"{rsi_time_frame} min candle has closed at {close_value}")
 
         if len(close_values) > RSI_PERIOD:
+            title = ""
+            message = ""
             np_closes = numpy.array(close_values)
             rsi = talib.RSI(np_closes, RSI_PERIOD)
             print("all rsis calculated")
@@ -77,17 +79,15 @@ def on_message(ws, message):
             if last_rsi > RSI_OVERBOUGHT:
                 print('********** OVERBOUGHT ALERT **********')
                 if (over_bought_alert):
-                    notification.title = TRADE_SYMBOL + " OVERBOUGHT RSI NOTIFICATION"
-                    notification.message = f"{TRADE_SYMBOL} has been overbought. The RSI unit is at {last_rsi} and the last price is $ {close_value}"
-                    push_notification_service.send_notification_to_mobile(notification.title, notification.message)
-                    notification.send()
-            
+                    title = TRADE_SYMBOL + " OVERBOUGHT RSI NOTIFICATION"
+                    message = f"{TRADE_SYMBOL} has been overbought. The RSI unit is at {last_rsi} and the last price is $ {close_value}"
+                    push_notification_service.send_notification_to_mobile(title, message)
+                    
             if last_rsi < RSI_OVERSOLD:
                 print('********** OVERSOLD ALERT **********')
-                notification.title = TRADE_SYMBOL + " OVERSOLD RSI NOTIFICATION"
-                notification.message = f"{TRADE_SYMBOL} has been oversold. The RSI unit is at {last_rsi} and the last price is $ {close_value}"
-                push_notification_service.send_notification_to_mobile(notification.title, notification.message)
-                notification.send()
+                title = TRADE_SYMBOL + " OVERSOLD RSI NOTIFICATION"
+                message = f"{TRADE_SYMBOL} has been oversold. The RSI unit is at {last_rsi} and the last price is $ {close_value}"
+                push_notification_service.send_notification_to_mobile(title, message)
 
 
 

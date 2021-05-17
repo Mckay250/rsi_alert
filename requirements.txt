@@ -2,4 +2,4 @@ python-binance
 TA-Lib
 numpy
 websocket_client
-notify-py
+# notify-py
