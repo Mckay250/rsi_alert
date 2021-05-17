@@ -2,4 +2,5 @@ python-binance
 TA-Lib
 numpy
 websocket_client
+pushbullet.py
 # notify-py
