@@ -1,14 +1,23 @@
 import websocket, json, pprint, numpy, talib, requests
 # from notifypy import Notify
 import push_notification_service
-
+import sys
 
 # Get user's inputs
 print("Enter trade symbol")
-trade_symbol = input("Symbol(default = EGLDUSDT): ")
-over_bought = input("Do you want to be Alerted when there is an overbought signal?(Y/N, default = N): ")
-rsi_period = int(input("Enter RSI PERIOD here (default = 7): "))
-rsi_time_frame = int(input("Enter RSI TIME FRAME here (default=15): "))
+
+trade_symbol = sys.argv[1]
+over_bought = sys.argv[2]
+rsi_period = int(sys.argv[3])
+rsi_time_frame = int(sys.argv[4])
+
+
+
+
+# trade_symbol = input("Symbol(default = EGLDUSDT): ")
+# over_bought = input("Do you want to be Alerted when there is an overbought signal?(Y/N, default = N): ")
+# rsi_period = int(input("Enter RSI PERIOD here (default = 7): "))
+# rsi_time_frame = int(input("Enter RSI TIME FRAME here (default=15): "))
 
 over_bought_alert = False
 

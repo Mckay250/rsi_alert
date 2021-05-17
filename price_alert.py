@@ -1,3 +1,4 @@
+import sys
 import websocket, json, pprint, numpy, talib, requests
 import push_notification_service
 
@@ -7,12 +8,15 @@ price_state = "HIGHER"
 
 
 print("Enter trade symbol")
-trade_symbol = input("Symbol(default = BNBUSDT): ")
+# trade_symbol = input("Symbol(default = BNBUSDT): ")
+trade_symbol = sys.argv[1]
 if trade_symbol in ["", " ", None]:
-    trade_symbol = 'BNBUSDT' 
-while (price_target in ["", " ", None, 0]):
-    price_target = float(input("Enter target price here: "))
-price_state_choice = input(f"Alert when price is lower(<) than {price_target}(default = Y): ")
+    trade_symbol = 'BNBUSDT'
+# while (price_target in ["", " ", None, 0]):
+#     price_target = float(input("Enter target price here: "))
+price_target = float(sys.argv[2])
+# price_state_choice = input(f"Alert when price is lower(<) than {price_target}(default = Y): ")
+price_state_choice = sys.argv[3]
 if (price_state_choice in ["y", "Y", None, "", " "]):
     price_state = "LOWER"
 
